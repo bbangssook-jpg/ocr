@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <!-- 작업 방식 안내 팁 박스 (사용자 피드백 반영: 단어 단위 검수) -->
+      <!-- 작업 방식 안내 팁 박스 (단어 단위 검수) -->
       <div class="how-it-works-chip">
         <div class="chip-badge"><i class="fa-solid fa-circle-info"></i> 작업 참여 방식</div>
         <div class="chip-text">
@@ -103,7 +103,7 @@
       </div>
     </section>
 
-    <!-- 전체 아카이브 통계 요약 바 (안성저장소/국가유산 데이터 요약 스타일) -->
+    <!-- 전체 아카이브 통계 요약 바 -->
     <section class="stats-overview">
       <div class="stat-card">
         <div class="stat-icon bg-navy"><i class="fa-solid fa-boxes-stacked"></i></div>
@@ -141,7 +141,7 @@
         <div>
           <span class="badge badge-archive"><i class="fa-solid fa-star"></i> 이달의 아카이브 큐레이션</span>
           <h2 class="section-title">이 달의 추천 도서: 갈림길의 대화</h2>
-          <p class="section-subtitle">인터넷팀에서 엄선한 도서 소개입니다. 단어 검수에 1회 이상 동참해 주신 분들께 복원본 전용 e-Book 열람 및 오디오북 권한을 제공합니다.</p>
+          <p class="section-subtitle">인터넷팀에서 엄선한 도서 소개입니다. 단어 검수에 1회 이상 동참해 주신 분들께 복원본 전권 e-Book 뷰어 및 오디오북 권한을 제공합니다.</p>
         </div>
         <div class="auth-status-chip" id="authStatusChip">
           <i class="fa-solid fa-lock"></i> 열람 권한 인증 대기
@@ -169,13 +169,13 @@
           <div class="book-meta-spec">
             <span><strong>분류</strong> 신앙 / 인문</span>
             <span><strong>자료번호</strong> A0021</span>
-            <span><strong>제공방식</strong> 보안 e-Book 뷰어 &amp; 오디오북</span>
+            <span><strong>제공형태</strong> 완본 디지털 e-Book 뷰어</span>
           </div>
         </div>
 
         <!-- 우측: 선정 이유 및 본문 소개 (전체 공개) + 하단 열람 인증 영역 -->
         <div class="exclusive-details">
-          <!-- 선정 이유 (수정: <인생길이라는 법정에서, 그리고 넓은 곳에 서서...>) -->
+          <!-- 선정 이유 (<인생길이라는 법정에서, 그리고 넓은 곳에 서서...>) -->
           <div class="curator-meta">
             <span class="curator-tag"><i class="fa-solid fa-feather-pointed"></i> 아카이브 큐레이터 추천사 (선정 이유)</span>
             <p class="curator-comment">
@@ -193,15 +193,15 @@
             </p>
           </div>
 
-          <!-- 하단: 복원본 e-Book 열람 & 오디오북 권한 인증 박스 -->
+          <!-- 하단: 복원본 완본 e-Book 열람 & 오디오북 권한 인증 박스 -->
           <div class="reading-access-box">
             <!-- 미인증 상태 UI -->
             <div id="accessLockedView">
               <div class="access-prompt">
                 <div class="prompt-icon"><i class="fa-solid fa-book-open-reader"></i></div>
                 <div class="prompt-text">
-                  <h4><i class="fa-solid fa-lock"></i> 봉사자 전용 보안 e-Book 열람 및 오디오북</h4>
-                  <p>OCR 검수 작업에 참여하신 닉네임이나 성함을 입력하시면, 다운로드 및 복제가 차단된 <strong>안전한 웹 e-Book 뷰어와 음성 낭독(오디오북)</strong>이 열립니다.</p>
+                  <h4><i class="fa-solid fa-lock"></i> 봉사자 전용 e-Book 완본 열람 및 오디오북</h4>
+                  <p>OCR 검수 작업에 참여하신 닉네임이나 성함을 입력하시면, 다운로드가 제한된 <strong>안전한 디지털 e-Book 완본 뷰어와 음성 낭독(오디오북)</strong>이 열립니다.</p>
                 </div>
               </div>
               <div class="auth-input-group">
@@ -214,23 +214,23 @@
               </div>
             </div>
 
-            <!-- 인증 완료 상태 UI (e-Book 뷰어 & 오디오북 버튼) -->
+            <!-- 인증 완료 상태 UI (e-Book 완본 뷰어 & 오디오북 버튼) -->
             <div id="accessUnlockedView" class="hidden">
               <div class="unlocked-banner">
                 <div class="unlocked-msg">
                   <i class="fa-solid fa-circle-check color-green"></i>
-                  <span><strong id="verifiedUserName">봉사자</strong>님 환영합니다! 봉사자 전용 열람 권한이 승인되었습니다.</span>
+                  <span><strong id="verifiedUserName">봉사자</strong>님 환영합니다! 복원본 완본 열람 권한이 승인되었습니다.</span>
                 </div>
                 <div class="unlocked-actions">
                   <button class="btn btn-gold btn-lg" id="btnOpenEbook">
-                    <i class="fa-solid fa-book-open"></i> e-Book 뷰어로 열람하기
+                    <i class="fa-solid fa-book-open"></i> &lt;갈림길의 대화&gt; 완본 e-Book 열람하기
                   </button>
                   <button class="btn btn-audio btn-lg" id="btnOpenAudiobook">
-                    <i class="fa-solid fa-headphones"></i> 오디오북 듣기 모드
+                    <i class="fa-solid fa-headphones"></i> 오디오북 낭독 모드
                   </button>
                 </div>
                 <p class="security-note">
-                  <i class="fa-solid fa-shield-halved"></i> 본 도서는 아카이브 보존 자료로서 무단 복제 및 다운로드가 제한된 전용 보안 뷰어로 제공됩니다.
+                  <i class="fa-solid fa-shield-halved"></i> 본 도서는 아카이브 보존 자료로서 표지부터 마지막 장까지 전체를 열람할 수 있으며, 무단 다운로드가 제한된 전용 보안 뷰어로 제공됩니다.
                 </p>
               </div>
             </div>
@@ -268,7 +268,6 @@
           <h2 class="section-title">따끈따끈, 새로 등록된 책</h2>
           <p class="section-subtitle">인터넷팀에서 스캔 작업을 마치고 단어 검수를 대기 중인 원고 목록입니다.</p>
         </div>
-        <!-- 수정: "검수 시스템 바로 가기" -> "검수 참여" -->
         <a href="https://ocr.rtl.kr/h" target="_blank" class="btn btn-outline btn-sm">
           <i class="fa-solid fa-arrow-right"></i> 검수 참여
         </a>
@@ -294,12 +293,10 @@
       </div>
 
       <div class="ranking-layout">
-        <!-- Top 3 포디움 -->
         <div class="podium-area" id="podiumArea">
           <!-- Top 1, 2, 3 렌더링 -->
         </div>
 
-        <!-- 전체 리스트 (수정: *권 기여 삭제, 누적 검수 건수만 표기) -->
         <div class="ranking-list-card">
           <h3><i class="fa-solid fa-ranking-star"></i> 이번 달 누적 검수 기여 순위</h3>
           <div class="ranking-list" id="rankingList">
@@ -348,22 +345,19 @@
     </div>
   </footer>
 
-  <!-- ======================== 전용 e-Book 보안 뷰어 & 오디오북 모달 ======================== -->
+  <!-- ======================== 전용 e-Book 완본 뷰어 & 오디오북 모달 ======================== -->
   <div class="ebook-modal-backdrop hidden" id="ebookModal">
     <div class="ebook-modal-window">
       <!-- 뷰어 상단 툴바 -->
       <div class="ebook-header">
         <div class="ebook-header-left">
-          <span class="ebook-badge"><i class="fa-solid fa-lock"></i> 복제방지 보안 뷰어</span>
-          <h3 class="ebook-book-title">갈림길의 대화 <span class="ebook-author">권신찬 저</span></h3>
+          <span class="ebook-badge"><i class="fa-solid fa-shield-halved"></i> 완본 열람 보안 뷰어</span>
+          <h3 class="ebook-book-title">갈림길의 대화 <span class="ebook-author">권신찬 저 · 전권 수록</span></h3>
         </div>
         <div class="ebook-controls">
-          <button class="ebook-tool-btn" id="btnThemeLight" title="밝은 테마"><i class="fa-solid fa-sun"></i></button>
-          <button class="ebook-tool-btn" id="btnThemeSepia" title="세피아 테마 (종이책 감성)"><i class="fa-solid fa-book"></i></button>
-          <button class="ebook-tool-btn" id="btnThemeDark" title="다크 테마"><i class="fa-solid fa-moon"></i></button>
-          <span class="tool-divider">|</span>
-          <button class="ebook-tool-btn" id="btnFontSmaller" title="글자 작게">A-</button>
-          <button class="ebook-tool-btn" id="btnFontLarger" title="글자 크게">A+</button>
+          <!-- 뷰어 모드 전환 탭 (완본 디지털 뷰어 vs 텍스트 모드) -->
+          <button class="ebook-tool-btn active-mode" id="btnModePdf" title="책 전체 완본 뷰어"><i class="fa-solid fa-file-pdf"></i> 완본 책 뷰어</button>
+          <button class="ebook-tool-btn" id="btnModeText" title="텍스트 읽기 모드"><i class="fa-solid fa-align-left"></i> 요약 텍스트</button>
           <span class="tool-divider">|</span>
           <button class="ebook-close-btn" id="btnCloseEbook" title="닫기">&times;</button>
         </div>
@@ -376,7 +370,7 @@
           <span id="ttsStatusText">오디오북 낭독 준비 완료</span>
         </div>
         <div class="audio-controls">
-          <button class="audio-btn" id="btnTtsPlay"><i class="fa-solid fa-play"></i> 듣기 재생</button>
+          <button class="audio-btn" id="btnTtsPlay"><i class="fa-solid fa-play"></i> 낭독 듣기</button>
           <button class="audio-btn" id="btnTtsPause"><i class="fa-solid fa-pause"></i> 일시정지</button>
           <button class="audio-btn" id="btnTtsStop"><i class="fa-solid fa-stop"></i> 정지</button>
           <select id="ttsRateSelect" class="audio-select">
@@ -387,10 +381,21 @@
         </div>
       </div>
 
-      <!-- 이북 본문 콘텐츠 영역 (복사 방지, 드래그 방지, 우클릭 차단) -->
-      <div class="ebook-body-scroll secure-reading-zone" id="ebookReadingZone" oncontextmenu="return false;">
+      <!-- 1. 완본 디지털 뷰어 영역 (책 전체가 다 보이는 구글 드라이브 보안 미리보기 임베드) -->
+      <div class="ebook-pdf-frame-wrap" id="ebookPdfView">
+        <iframe 
+          id="ebookPdfIframe" 
+          src="https://drive.google.com/file/d/1jqU5iYvzsKjGGobNW21-RbK-VJw698Qy/preview" 
+          width="100%" 
+          height="100%" 
+          allow="autoplay"
+          title="갈림길의 대화 완본 전자책 뷰어">
+        </iframe>
+      </div>
+
+      <!-- 2. 텍스트 읽기 모드 (보조 탭) -->
+      <div class="ebook-body-scroll secure-reading-zone hidden" id="ebookTextView" oncontextmenu="return false;">
         <div class="ebook-page-container" id="ebookPageContainer">
-          
           <div class="ebook-inner-title-area">
             <span class="ebook-inner-series">인생과 진리 문고 [A0021]</span>
             <h2 class="ebook-inner-main-title">갈림길의 대화</h2>
@@ -433,13 +438,13 @@
           <div class="ebook-notice-card">
             <i class="fa-solid fa-circle-info"></i>
             <div>
-              <strong>디지털 아카이브 봉사자 전용 열람 안내</strong><br>
-              본 전자책은 자원봉사자분들의 소중한 OCR 검수로 보존된 자료입니다. 외부 유출 및 복제를 방지하기 위해 텍스트 복사, 인쇄 및 다운로드가 제한되어 있습니다.
+              <strong>전체 페이지 열람 안내</strong><br>
+              상단의 <strong>[완본 책 뷰어]</strong> 버튼을 누르시면 책 1권 전체 페이지(표지부터 마지막 장까지)를 그대로 넘겨보실 수 있습니다.
             </div>
           </div>
-
         </div>
       </div>
+
     </div>
   </div>
 
