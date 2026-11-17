@@ -1,6 +1,6 @@
 /**
  * 모임 강연·서적 디지털 아카이브 웹 대시보드 스크립트
- * (완본 e-Book 뷰어 & Web Speech TTS 오디오북 지원)
+ * (70대 맞춤 글자크기 조절 & 연속 오디오북 이어듣기 지원)
  */
 
 // ======================== 1. 기본 데이터 정의 ========================
@@ -93,7 +93,7 @@ function renderBooksGrid() {
             <span class="${isDone ? 'rate-100' : 'rate-progress'}">
               <i class="fa-solid ${isDone ? 'fa-check-circle' : 'fa-clock'}"></i> 복원률 ${book.rate}%
             </span>
-            <span style="color:#64748b; font-size:0.75rem;">
+            <span style="color:#64748b; font-size:0.8rem;">
               ${isDone ? '<strong style="color:#059669;">보존 완료</strong>' : `${book.contributors}명 참여`}
             </span>
           </div>
@@ -185,7 +185,31 @@ function renderHallOfFame(searchTerm = "") {
   });
 }
 
-// ======================== 3. 봉사자 닉네임 인증 ========================
+// ======================== 3. 70대 어르신 배려 글자크기 조절기 ========================
+function initFontSizeAdjuster() {
+  const buttons = document.querySelectorAll(".btn-font-scale");
+  const savedScale = localStorage.getItem("ocr_font_scale") || "large"; // 기본값 '크게'
+
+  applyScale(savedScale);
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const scale = btn.dataset.scale;
+      applyScale(scale);
+      localStorage.setItem("ocr_font_scale", scale);
+    });
+  });
+
+  function applyScale(scale) {
+    document.body.classList.remove("font-normal", "font-large", "font-xlarge");
+    document.body.classList.add(`font-${scale}`);
+    buttons.forEach(b => {
+      b.classList.toggle("active", b.dataset.scale === scale);
+    });
+  }
+}
+
+// ======================== 4. 봉사자 닉네임 인증 ========================
 function initVolunteerAuth() {
   const accessLockedView = document.getElementById("accessLockedView");
   const accessUnlockedView = document.getElementById("accessUnlockedView");
@@ -204,6 +228,7 @@ function initVolunteerAuth() {
     if (verifiedUserName) {
       verifiedUserName.innerText = userName;
     }
+    checkAudioHistory();
   }
 
   if (state.verifiedUser) {
@@ -239,31 +264,58 @@ function initVolunteerAuth() {
   });
 }
 
-// ======================== 4. 완본 e-Book 뷰어 & TTS 오디오북 ========================
-let ttsUtterance = null;
+// ======================== 5. 연속 오디오북 (TTS) 이어듣기 & 진행률 시스템 ========================
+let currentParagraphIdx = 0;
+let isAudioActive = false;
+let isAudioPaused = false;
+let paragraphElements = [];
+
+function checkAudioHistory() {
+  const savedIdx = parseInt(localStorage.getItem("ocr_audio_last_index") || "0", 10);
+  const banner = document.getElementById("audioHistoryBanner");
+  const textEl = document.getElementById("audioHistoryText");
+
+  if (savedIdx > 0 && banner && textEl) {
+    const pageEst = Math.floor(savedIdx / 2) + 1;
+    textEl.innerText = `이전에 들으시던 기록: ${savedIdx + 1}번째 단락 (약 ${pageEst}페이지 분량)`;
+    banner.classList.remove("hidden");
+  }
+}
 
 function initEbookViewerAndAudio() {
   const modal = document.getElementById("ebookModal");
   const btnOpenEbook = document.getElementById("btnOpenEbook");
   const btnOpenAudio = document.getElementById("btnOpenAudiobook");
   const btnCloseEbook = document.getElementById("btnCloseEbook");
+  const btnResumeFromBanner = document.getElementById("btnResumeAudio");
 
-  // 뷰어 모드 전환 버튼
+  // 모드 전환
   const btnModePdf = document.getElementById("btnModePdf");
   const btnModeText = document.getElementById("btnModeText");
   const pdfView = document.getElementById("ebookPdfView");
   const textView = document.getElementById("ebookTextView");
 
-  // TTS 오디오 컨트롤
+  // 오디오 컨트롤
+  const btnResume = document.getElementById("btnTtsResume");
   const btnPlay = document.getElementById("btnTtsPlay");
   const btnPause = document.getElementById("btnTtsPause");
   const btnStop = document.getElementById("btnTtsStop");
   const rateSelect = document.getElementById("ttsRateSelect");
   const statusText = document.getElementById("ttsStatusText");
+  const progressText = document.getElementById("ttsProgressText");
 
   if (!modal) return;
 
-  // 완본 뷰어 열기 (기본값: 책 전체 PDF 뷰어)
+  // 모든 문단 수집
+  paragraphElements = Array.from(document.querySelectorAll("#ebookTextView .ebook-paragraph"));
+  const totalParagraphs = paragraphElements.length;
+
+  // 저장된 인덱스 로드
+  const savedIdx = parseInt(localStorage.getItem("ocr_audio_last_index") || "0", 10);
+  currentParagraphIdx = savedIdx < totalParagraphs ? savedIdx : 0;
+  updateProgressUI(currentParagraphIdx);
+
+  // 완본 뷰어 열기
   if (btnOpenEbook) {
     btnOpenEbook.addEventListener("click", () => {
       switchViewMode("pdf");
@@ -271,24 +323,34 @@ function initEbookViewerAndAudio() {
     });
   }
 
-  // 오디오북 듣기 모드로 열기
+  // 오디오북 열기
   if (btnOpenAudio) {
     btnOpenAudio.addEventListener("click", () => {
-      switchViewMode("text"); // 텍스트를 보며 들을 수 있게 텍스트 모드로
+      switchViewMode("text");
       modal.classList.remove("hidden");
-      startTtsPlayback();
+      // 저장된 기록이 있으면 이어서, 없으면 처음부터
+      playFromIndex(currentParagraphIdx);
+    });
+  }
+
+  // 메인 배너에서 '이어서 듣기' 클릭
+  if (btnResumeFromBanner) {
+    btnResumeFromBanner.addEventListener("click", () => {
+      switchViewMode("text");
+      modal.classList.remove("hidden");
+      playFromIndex(currentParagraphIdx);
     });
   }
 
   // 닫기
   if (btnCloseEbook) {
     btnCloseEbook.addEventListener("click", () => {
-      stopTtsPlayback();
+      stopAudioPlayback();
       modal.classList.add("hidden");
+      checkAudioHistory();
     });
   }
 
-  // 모드 전환 함수
   function switchViewMode(mode) {
     if (mode === "pdf") {
       pdfView.classList.remove("hidden");
@@ -306,77 +368,130 @@ function initEbookViewerAndAudio() {
   if (btnModePdf) btnModePdf.addEventListener("click", () => switchViewMode("pdf"));
   if (btnModeText) btnModeText.addEventListener("click", () => switchViewMode("text"));
 
-  // ---------------- Web Speech API TTS 로직 ----------------
-  function getBookText() {
-    const paragraphs = document.querySelectorAll("#ebookTextView .ebook-paragraph");
-    let fullText = "갈림길의 대화. 권신찬 저. ";
-    paragraphs.forEach(p => {
-      fullText += p.innerText + " ";
-    });
-    return fullText;
+  // ---------------- 연속 문단 낭독 엔진 ----------------
+  function updateProgressUI(idx) {
+    const pageEst = Math.floor(idx / 2) + 1;
+    if (progressText) {
+      progressText.innerText = `${idx + 1} / ${totalParagraphs} 단락 (약 ${pageEst}페이지)`;
+    }
   }
 
-  function startTtsPlayback() {
+  function highlightParagraph(idx) {
+    paragraphElements.forEach((p, i) => {
+      if (i === idx) {
+        p.classList.add("reading-active");
+        p.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        p.classList.remove("reading-active");
+      }
+    });
+  }
+
+  function playFromIndex(index) {
     if (!("speechSynthesis" in window)) {
-      alert("죄송합니다. 현재 브라우저가 음성 낭독 기능을 지원하지 않습니다.");
+      alert("죄송합니다. 현재 브라우저가 음성 낭독을 지원하지 않습니다.");
       return;
     }
 
+    if (index >= totalParagraphs) {
+      index = 0; // 끝까지 다 들었으면 처음으로 리셋
+    }
+
+    currentParagraphIdx = index;
+    localStorage.setItem("ocr_audio_last_index", currentParagraphIdx);
+    updateProgressUI(currentParagraphIdx);
+    highlightParagraph(currentParagraphIdx);
+
     window.speechSynthesis.cancel();
 
-    const text = getBookText();
-    ttsUtterance = new SpeechSynthesisUtterance(text);
-    ttsUtterance.lang = "ko-KR";
-    ttsUtterance.rate = parseFloat(rateSelect ? rateSelect.value : "1.0");
+    const targetP = paragraphElements[currentParagraphIdx];
+    const textToSpeak = targetP.innerText.trim();
 
-    ttsUtterance.onstart = () => {
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = "ko-KR";
+    utterance.rate = parseFloat(rateSelect ? rateSelect.value : "0.95");
+
+    utterance.onstart = () => {
+      isAudioActive = true;
+      isAudioPaused = false;
       if (statusText) statusText.innerText = "낭독 재생 중... 🎧";
     };
 
-    ttsUtterance.onend = () => {
-      if (statusText) statusText.innerText = "낭독 완료";
+    // 현재 문단이 끝나면 자동으로 다음 문단 이어듣기!
+    utterance.onend = () => {
+      if (!isAudioActive) return;
+
+      if (currentParagraphIdx + 1 < totalParagraphs) {
+        currentParagraphIdx++;
+        localStorage.setItem("ocr_audio_last_index", currentParagraphIdx);
+        playFromIndex(currentParagraphIdx);
+      } else {
+        isAudioActive = false;
+        if (statusText) statusText.innerText = "전체 낭독 완료 🎉";
+        paragraphElements.forEach(p => p.classList.remove("reading-active"));
+      }
     };
 
-    ttsUtterance.onerror = () => {
-      if (statusText) statusText.innerText = "낭독 대기 중";
+    utterance.onerror = (e) => {
+      console.warn("TTS Error:", e);
+      isAudioActive = false;
     };
 
-    window.speechSynthesis.speak(ttsUtterance);
+    window.speechSynthesis.speak(utterance);
   }
 
-  function pauseTtsPlayback() {
+  function pauseAudioPlayback() {
     if (window.speechSynthesis && window.speechSynthesis.speaking) {
       if (window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
+        isAudioPaused = false;
         if (statusText) statusText.innerText = "낭독 재생 중... 🎧";
       } else {
         window.speechSynthesis.pause();
-        if (statusText) statusText.innerText = "일시정지됨 ⏸️";
+        isAudioPaused = true;
+        if (statusText) statusText.innerText = "일시정지됨 ⏸️ (위치 기억 중)";
+        localStorage.setItem("ocr_audio_last_index", currentParagraphIdx);
       }
     }
   }
 
-  function stopTtsPlayback() {
+  function stopAudioPlayback() {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
-      if (statusText) statusText.innerText = "낭독 정지됨";
+      isAudioActive = false;
+      isAudioPaused = false;
+      if (statusText) statusText.innerText = "낭독 정지됨 (위치 저장됨)";
+      localStorage.setItem("ocr_audio_last_index", currentParagraphIdx);
+      paragraphElements.forEach(p => p.classList.remove("reading-active"));
     }
   }
 
-  if (btnPlay) btnPlay.addEventListener("click", startTtsPlayback);
-  if (btnPause) btnPause.addEventListener("click", pauseTtsPlayback);
-  if (btnStop) btnStop.addEventListener("click", stopTtsPlayback);
+  // 컨트롤러 이벤트
+  if (btnResume) {
+    btnResume.addEventListener("click", () => {
+      playFromIndex(currentParagraphIdx);
+    });
+  }
+
+  if (btnPlay) {
+    btnPlay.addEventListener("click", () => {
+      playFromIndex(0); // 처음부터 다시 재생
+    });
+  }
+
+  if (btnPause) btnPause.addEventListener("click", pauseAudioPlayback);
+  if (btnStop) btnStop.addEventListener("click", stopAudioPlayback);
 
   if (rateSelect) {
     rateSelect.addEventListener("change", () => {
-      if (window.speechSynthesis.speaking) {
-        startTtsPlayback();
+      if (isAudioActive && !isAudioPaused) {
+        playFromIndex(currentParagraphIdx);
       }
     });
   }
 }
 
-// ======================== 5. 구글 스프레드시트 연동 ========================
+// ======================== 6. 구글 스프레드시트 연동 ========================
 function initGoogleSheetIntegration() {
   const btnOpenModal = document.getElementById("btnOpenSheetModal");
   const btnCloseModal = document.getElementById("btnCloseSheetModal");
@@ -466,7 +581,7 @@ async function fetchGoogleSheetData(csvUrl) {
   }
 }
 
-// ======================== 6. 이벤트 핸들러 및 전체 렌더 ========================
+// ======================== 7. 초기화 ========================
 function renderAll() {
   updateStatsOverview();
   renderBooksGrid();
@@ -494,6 +609,7 @@ function initEventHandlers() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
+  initFontSizeAdjuster();
   initVolunteerAuth();
   initEbookViewerAndAudio();
   initGoogleSheetIntegration();

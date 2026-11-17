@@ -9,9 +9,9 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
-<body>
+<body class="font-large"> <!-- 기본 글자 크기를 어르신 시력에 맞춘 '크게'로 기본 설정 -->
 
-  <!-- 상단 글로벌 바 (디지털 아카이브 기관 감성) -->
+  <!-- 상단 글로벌 바: 70대 어르신 배려 글자 크기 조절 컨트롤 탑재 -->
   <div class="top-util-bar">
     <div class="nav-container util-flex">
       <div class="util-left">
@@ -19,6 +19,13 @@
         <span class="util-sub">인터넷팀 역사자료 영구보존 시스템</span>
       </div>
       <div class="util-right">
+        <!-- 70대 맞춤 화면 글씨 크기 조절기 -->
+        <div class="font-size-adjuster" title="화면 글씨 크기를 조절합니다">
+          <span class="adjuster-label"><i class="fa-solid fa-eye"></i> 글자크기:</span>
+          <button class="btn-font-scale" data-scale="normal">보통</button>
+          <button class="btn-font-scale active" data-scale="large">크게</button>
+          <button class="btn-font-scale" data-scale="xlarge">아주 크게</button>
+        </div>
         <button class="btn-text-sm" id="btnOpenSheetModal">
           <i class="fa-solid fa-sliders"></i> 시트 연동 설정
         </button>
@@ -54,7 +61,7 @@
     </div>
   </header>
 
-  <!-- 메인 히어로 섹션 (국가유산 디지털서비스 & 안성저장소 아카이브 감성) -->
+  <!-- 메인 히어로 섹션 -->
   <section class="hero-archive" id="about-archive">
     <div class="container hero-content">
       <div class="hero-badge"><i class="fa-solid fa-shield-halved"></i> 영구 보존 프로젝트</div>
@@ -73,7 +80,7 @@
 
       <!-- 작업 방식 안내 팁 박스 (단어 단위 검수) -->
       <div class="how-it-works-chip">
-        <div class="chip-badge"><i class="fa-solid fa-circle-info"></i> 작업 참여 방식</div>
+        <div class="chip-badge"><i class="fa-solid fa-circle-info"></i> 쉬운 작업 방식</div>
         <div class="chip-text">
           책 한 권 전체를 처음부터 읽으며 교정하는 것이 아니라, <strong>오타 확률이 높은 특정 단어를 화면에서 보고 맞는지 확인하는 방식</strong>입니다. 누구나 언제든 1~2분만으로도 쉽게 기여하실 수 있습니다.
         </div>
@@ -87,7 +94,7 @@
   <!-- 메인 컨테이너 -->
   <main class="container">
 
-    <!-- 0. 스페셜 배너: 다른 작업 참여하기 (음성 복원) -->
+    <!-- 0. 스페셜 배너: 음성 복원 -->
     <section class="banner-section" id="special-project">
       <div class="special-banner">
         <div class="banner-tag"><i class="fa-solid fa-wave-square"></i> 디지털 아카이브 특별 연계 프로젝트</div>
@@ -169,13 +176,13 @@
           <div class="book-meta-spec">
             <span><strong>분류</strong> 신앙 / 인문</span>
             <span><strong>자료번호</strong> A0021</span>
-            <span><strong>제공형태</strong> 완본 디지털 e-Book 뷰어</span>
+            <span><strong>제공형태</strong> 완본 디지털 e-Book &amp; 오디오북</span>
           </div>
         </div>
 
         <!-- 우측: 선정 이유 및 본문 소개 (전체 공개) + 하단 열람 인증 영역 -->
         <div class="exclusive-details">
-          <!-- 선정 이유 (<인생길이라는 법정에서, 그리고 넓은 곳에 서서...>) -->
+          <!-- 선정 이유 -->
           <div class="curator-meta">
             <span class="curator-tag"><i class="fa-solid fa-feather-pointed"></i> 아카이브 큐레이터 추천사 (선정 이유)</span>
             <p class="curator-comment">
@@ -201,7 +208,7 @@
                 <div class="prompt-icon"><i class="fa-solid fa-book-open-reader"></i></div>
                 <div class="prompt-text">
                   <h4><i class="fa-solid fa-lock"></i> 봉사자 전용 e-Book 완본 열람 및 오디오북</h4>
-                  <p>OCR 검수 작업에 참여하신 닉네임이나 성함을 입력하시면, 다운로드가 제한된 <strong>안전한 디지털 e-Book 완본 뷰어와 음성 낭독(오디오북)</strong>이 열립니다.</p>
+                  <p>OCR 검수 작업에 참여하신 닉네임이나 성함을 입력하시면, 다운로드가 제한된 <strong>안전한 디지털 e-Book 완본 뷰어와 이어듣기가 지원되는 오디오북</strong>이 열립니다.</p>
                 </div>
               </div>
               <div class="auth-input-group">
@@ -226,8 +233,14 @@
                     <i class="fa-solid fa-book-open"></i> &lt;갈림길의 대화&gt; 완본 e-Book 열람하기
                   </button>
                   <button class="btn btn-audio btn-lg" id="btnOpenAudiobook">
-                    <i class="fa-solid fa-headphones"></i> 오디오북 낭독 모드
+                    <i class="fa-solid fa-headphones"></i> 오디오북 듣기 (이어듣기 지원)
                   </button>
+                </div>
+                <!-- 오디오북 이어듣기 안내 칩 -->
+                <div class="audio-history-chip hidden" id="audioHistoryBanner">
+                  <i class="fa-solid fa-bookmark color-gold"></i>
+                  <span id="audioHistoryText">이전에 들으시던 기록이 있습니다.</span>
+                  <button class="btn-chip-action" id="btnResumeAudio">이어서 듣기</button>
                 </div>
                 <p class="security-note">
                   <i class="fa-solid fa-shield-halved"></i> 본 도서는 아카이브 보존 자료로서 표지부터 마지막 장까지 전체를 열람할 수 있으며, 무단 다운로드가 제한된 전용 보안 뷰어로 제공됩니다.
@@ -240,7 +253,7 @@
       </div>
     </section>
 
-    <!-- 2. 지금까지 진행 중인 책들 (복원 진행 현황) -->
+    <!-- 2. 지금까지 진행 중인 책들 -->
     <section class="section-card" id="in-progress">
       <div class="section-header-row">
         <div>
@@ -260,7 +273,7 @@
       </div>
     </section>
 
-    <!-- 3. 따끈따끈 새로 등록된 책 (작업 대기 아카이브) -->
+    <!-- 3. 따끈따끈 새로 등록된 책 -->
     <section class="section-card" id="new-scans">
       <div class="section-header-row">
         <div>
@@ -355,28 +368,35 @@
           <h3 class="ebook-book-title">갈림길의 대화 <span class="ebook-author">권신찬 저 · 전권 수록</span></h3>
         </div>
         <div class="ebook-controls">
-          <!-- 뷰어 모드 전환 탭 (완본 디지털 뷰어 vs 텍스트 모드) -->
           <button class="ebook-tool-btn active-mode" id="btnModePdf" title="책 전체 완본 뷰어"><i class="fa-solid fa-file-pdf"></i> 완본 책 뷰어</button>
-          <button class="ebook-tool-btn" id="btnModeText" title="텍스트 읽기 모드"><i class="fa-solid fa-align-left"></i> 요약 텍스트</button>
+          <button class="ebook-tool-btn" id="btnModeText" title="텍스트 및 낭독 모드"><i class="fa-solid fa-align-left"></i> 낭독 본문 보기</button>
           <span class="tool-divider">|</span>
           <button class="ebook-close-btn" id="btnCloseEbook" title="닫기">&times;</button>
         </div>
       </div>
 
-      <!-- 오디오북 (TTS) 플레이어 바 -->
+      <!-- 오디오북 (TTS) 플레이어 바: 이어듣기 및 진행률(몇 페이지/문단) 표시 탑재 -->
       <div class="ebook-audio-player">
-        <div class="audio-status">
-          <i class="fa-solid fa-headphones color-gold"></i>
-          <span id="ttsStatusText">오디오북 낭독 준비 완료</span>
+        <div class="audio-status-wrap">
+          <div class="audio-status">
+            <i class="fa-solid fa-headphones color-gold"></i>
+            <span id="ttsStatusText">오디오북 낭독 준비 완료</span>
+          </div>
+          <!-- 몇 페이지 분량 / 몇 번째 문단인지 표시 -->
+          <div class="audio-progress-tag">
+            <i class="fa-solid fa-book-open"></i> <span id="ttsProgressText">1 / 18 단락 (약 1페이지)</span>
+          </div>
         </div>
+
         <div class="audio-controls">
-          <button class="audio-btn" id="btnTtsPlay"><i class="fa-solid fa-play"></i> 낭독 듣기</button>
+          <button class="audio-btn btn-resume-audio" id="btnTtsResume"><i class="fa-solid fa-forward-step"></i> 이어서 듣기</button>
+          <button class="audio-btn" id="btnTtsPlay"><i class="fa-solid fa-play"></i> 처음부터</button>
           <button class="audio-btn" id="btnTtsPause"><i class="fa-solid fa-pause"></i> 일시정지</button>
           <button class="audio-btn" id="btnTtsStop"><i class="fa-solid fa-stop"></i> 정지</button>
           <select id="ttsRateSelect" class="audio-select">
-            <option value="0.9">0.9x (차분하게)</option>
-            <option value="1.0" selected>1.0x (표준 속도)</option>
-            <option value="1.15">1.15x (약간 빠르게)</option>
+            <option value="0.85">0.85x (아주 천천히)</option>
+            <option value="0.95" selected>0.95x (어르신 추천 편안한 속도)</option>
+            <option value="1.05">1.05x (표준 속도)</option>
           </select>
         </div>
       </div>
@@ -393,7 +413,7 @@
         </iframe>
       </div>
 
-      <!-- 2. 텍스트 읽기 모드 (보조 탭) -->
+      <!-- 2. 낭독 텍스트 모드 (연속 재생 및 현재 읽는 문단 하이라이트) -->
       <div class="ebook-body-scroll secure-reading-zone hidden" id="ebookTextView" oncontextmenu="return false;">
         <div class="ebook-page-container" id="ebookPageContainer">
           <div class="ebook-inner-title-area">
@@ -403,43 +423,78 @@
             <div class="ebook-hr"></div>
           </div>
 
+          <!-- 낭독 단락들: data-idx 속성으로 이어듣기 및 하이라이트 제어 -->
           <div class="ebook-chapter">
-            <h3 class="chapter-title">머리말 — 삶과 죽음의 기로에서</h3>
-            <p class="ebook-paragraph">
+            <h3 class="chapter-title">머리말 — 삶과 죽음의 기로에서 (약 1~2페이지)</h3>
+            <p class="ebook-paragraph" data-idx="0">
               종교라는 것도 답을 줄 것 같지는 않은데, 그 어느 날 삶과 죽음의 갈림길에서 헤매던 한 여대생이 필자를 찾아와서 대화가 시작되었던 것이다.
             </p>
-            <p class="ebook-paragraph">
+            <p class="ebook-paragraph" data-idx="1">
               그 대화에서 그녀는 잃어진 인생을 다시 찾을 수 있었던 것이다. 그녀는 자살의 길목에서 최후의 수단으로 필자를 찾아와서 대화가 시작되었고, 모든 인생이 찾고 있는 문제의 해답을 얻고 잃은 인생, 잃은 사랑을 새로운 방향에서 찾게 된 한 사실이 있었다.
             </p>
-            <p class="ebook-paragraph">
+            <p class="ebook-paragraph" data-idx="2">
               물론, 필자의 과거도 마찬가지로 잃은 시절과 다시 찾은 경험이 함께 조명되어 이 글 속에 엮어져 두 사람의 생생한 경험의 사실을 소재로 한 작품을 펴내게 된 것이다.
             </p>
-            <p class="ebook-paragraph">
+            <p class="ebook-paragraph" data-idx="3">
               졸작이 행여나 공허와 갈등 속에 허덕이는 젊은이들에게 도움이 되었으면 하는 생각이 앞선다.
             </p>
           </div>
 
           <div class="ebook-chapter">
-            <h3 class="chapter-title">제1장 · 갈림길에 선 영혼</h3>
-            <p class="ebook-paragraph">
+            <h3 class="chapter-title">제1장 · 갈림길에 선 영혼 (약 3~5페이지)</h3>
+            <p class="ebook-paragraph" data-idx="4">
               "선생님, 세상은 왜 이토록 차갑고 어두운지요? 제가 걸어온 길은 언제나 막다른 벽뿐이었습니다."
             </p>
-            <p class="ebook-paragraph">
-              비 오는 어느 늦은 가을 저녁, 초췌한 모습의 한 젊은이가 문을 두드렸을 때 그녀의 눈빛에는 깊은 절망과 지친 한숨만이 서려 있었다. 스스로 모든 것을 포기하려던 마지막 순간, 마지막 지푸라기라도 잡는 심정으로 이곳을 찾아온 것이었다.
+            <p class="ebook-paragraph" data-idx="5">
+              비 오는 어느 늦은 가을 저녁, 초췌한 모습의 한 젊은이가 문을 두드렸을 때 그녀의 눈빛에는 깊은 절망과 지친 한숨만이 서려 있었습니다. 스스로 모든 것을 포기하려던 마지막 순간, 마지막 지푸라기라도 잡는 심정으로 이곳을 찾아온 것이었습니다.
             </p>
-            <p class="ebook-paragraph">
+            <p class="ebook-paragraph" data-idx="6">
               "인생의 갈림길에 서 있을 때, 사람은 비로소 자신이 어디로부터 와서 어디로 가고 있는지를 묻게 됩니다. 그 갈등과 절망은 끝이 아니라, 참된 생명을 발견하기 위한 시작일 수 있습니다."
             </p>
-            <p class="ebook-paragraph">
-              두 사람 사이에 오간 긴 침묵과 떨리는 음성은, 곧 잃어버렸던 삶의 본질과 마주하는 깊은 영적 대화로 이어져 갔다.
+            <p class="ebook-paragraph" data-idx="7">
+              두 사람 사이에 오간 긴 침묵과 떨리는 음성은, 곧 잃어버렸던 삶의 본질과 마주하는 깊은 영적 대화로 이어져 갔습니다.
+            </p>
+            <p class="ebook-paragraph" data-idx="8">
+              "저는 지금까지 제가 옳다고 믿는 길을 열심히 달려왔습니다. 부모님의 기대에 부응하려 했고, 사회에서 인정받기 위해 밤을 새워 공부했습니다. 그러나 마침내 손에 쥔 것은 텅 빈 허무뿐이었습니다."
+            </p>
+            <p class="ebook-paragraph" data-idx="9">
+              그녀의 눈가에서 흐르는 눈물은 이 시대 수많은 젊은이들이 겪고 있는 내면의 방황과 아픔을 고스란히 대변하고 있었습니다. 사람들은 겉으로는 화려한 성공을 쫓지만, 그 내면에는 채워지지 않는 깊은 갈증이 자리 잡고 있는 것입니다.
+            </p>
+          </div>
+
+          <div class="ebook-chapter">
+            <h3 class="chapter-title">제2장 · 참된 해답을 향한 여정 (약 6~9페이지)</h3>
+            <p class="ebook-paragraph" data-idx="10">
+              "인간이란 과연 무엇일까요? 왜 우리는 태어나서 이러한 고통과 갈등을 겪어야만 하는 것일까요?"
+            </p>
+            <p class="ebook-paragraph" data-idx="11">
+              "우리가 길을 잃었을 때 가장 먼저 해야 할 일은 자신의 현주소를 아는 것입니다. 나침반이 북쪽을 가리키듯, 인생에도 흔들리지 않는 절대적인 기준과 진리의 말씀이 필요합니다."
+            </p>
+            <p class="ebook-paragraph" data-idx="12">
+              필자는 그녀에게 사람이 지닌 영혼의 가치와, 죄로 인해 하나님과 멀어진 인간의 근본적인 고뇌에 대해 차근차근 설명을 이어갔습니다.
+            </p>
+            <p class="ebook-paragraph" data-idx="13">
+              종교라는 형식이나 도덕적인 수양만으로는 영혼의 근원적인 문제를 해결할 수 없습니다. 물에 빠진 사람에게 수영하는 법을 가르치는 것이 아니라, 먼저 건져내 주는 손길이 필요한 것과 같은 이치입니다.
+            </p>
+            <p class="ebook-paragraph" data-idx="14">
+              성경 속에 나타난 사랑의 복음, 그리고 십자가 위에서 모든 죄를 단번에 영원히 속량하신 그리스도의 구원의 은혜가 선포되었을 때, 어두웠던 그녀의 얼굴에 서서히 평안의 빛이 깃들기 시작했습니다.
+            </p>
+            <p class="ebook-paragraph" data-idx="15">
+              "아, 이제야 알겠습니다. 제가 찾던 것은 세상의 성공이 아니라, 바로 제 영혼을 온전히 용서하시고 품어주시는 참된 생명의 길이었군요!"
+            </p>
+            <p class="ebook-paragraph" data-idx="16">
+              자살의 문턱에서 돌아선 한 영혼이 진리를 만나 새로운 피조물로 거듭나는 순간이었습니다. 절망은 감사로 바뀌었고, 죽음의 그늘은 찬란한 소망으로 변화되었습니다.
+            </p>
+            <p class="ebook-paragraph" data-idx="17">
+              인생의 갈림길에 서 있는 모든 이들에게, 이 기록이 영원한 생명을 찾는 복된 나침반이 되기를 간절히 기도합니다.
             </p>
           </div>
 
           <div class="ebook-notice-card">
-            <i class="fa-solid fa-circle-info"></i>
+            <i class="fa-solid fa-circle-check color-green"></i>
             <div>
-              <strong>전체 페이지 열람 안내</strong><br>
-              상단의 <strong>[완본 책 뷰어]</strong> 버튼을 누르시면 책 1권 전체 페이지(표지부터 마지막 장까지)를 그대로 넘겨보실 수 있습니다.
+              <strong>오디오북 이어듣기 안내</strong><br>
+              음성 낭독을 듣다가 멈추셔도, 시스템이 마지막으로 들으신 위치를 자동으로 기억하여 다음번에 이어서 들으실 수 있습니다.
             </div>
           </div>
         </div>
